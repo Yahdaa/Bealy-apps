@@ -2213,42 +2213,42 @@ async function displayFeaturedApps() {
         .slice(0, 10)
     },
     {
-      title: "Apps de Entretenimiento",
+      title: "🎬 Entretenimiento sin Límites",
       apps: availableApps.filter(app => app.category === 'Entretenimiento')
         .sort((a, b) => b.rating - a.rating)
         .slice(0, 8)
     },
     {
-      title: "Juegos Populares",
+      title: "🎮 Juegos Más Jugados",
       apps: availableApps.filter(app => app.category === 'Juegos')
         .sort((a, b) => parseDownloads(b.downloads) - parseDownloads(a.downloads))
         .slice(0, 8)
     },
     {
-      title: "Apps de Comunicación",
+      title: "💬 Mantén el Contacto",
       apps: availableApps.filter(app => app.category === 'Comunicación')
         .sort((a, b) => b.rating - a.rating)
         .slice(0, 8)
     },
     {
-      title: "Apps de Finanzas",
+      title: "💰 Gestiona tu Dinero",
       apps: availableApps.filter(app => app.category === 'Finanzas')
         .sort((a, b) => b.rating - a.rating)
         .slice(0, 6)
     },
     {
-      title: "Apps Educativas",
+      title: "🎓 Aprende Algo Nuevo",
       apps: availableApps.filter(app => app.category === 'Educación')
         .sort((a, b) => b.rating - a.rating)
         .slice(0, 6)
     },
     {
-      title: "Apps con Mejor Calificación",
+      title: "⭐ Las Mejor Valoradas",
       apps: [...availableApps].sort((a, b) => b.rating - a.rating)
         .slice(0, 10)
     },
     {
-      title: "Apps Ligeras (Menos de 50MB)",
+      title: "🪶 Rápidas y Ligeras",
       apps: availableApps.filter(app => {
         const size = parseInt(app.size);
         return size < 50;
@@ -2256,34 +2256,34 @@ async function displayFeaturedApps() {
         .slice(0, 8)
     },
     {
-      title: "Apps con Más de 100M Descargas",
+      title: "🔥 Tendencias Globales",
       apps: availableApps.filter(app => parseDownloads(app.downloads) >= 100000000)
         .sort((a, b) => parseDownloads(b.downloads) - parseDownloads(a.downloads))
         .slice(0, 10)
     },
     {
-      title: "Apps de Meta",
+      title: "💙 Lo Mejor de Meta",
       apps: availableApps.filter(app => app.developer === 'Meta')
         .sort((a, b) => parseDownloads(b.downloads) - parseDownloads(a.downloads))
     },
     {
-      title: "Apps de Google",
+      title: "🌐 Universo Google",
       apps: availableApps.filter(app => app.developer.includes('Google'))
         .sort((a, b) => parseDownloads(b.downloads) - parseDownloads(a.downloads))
     },
     {
-      title: "Apps de ByteDance",
+      title: "🎥 Creadores de TikTok",
       apps: availableApps.filter(app => app.developer === 'ByteDance')
         .sort((a, b) => parseDownloads(b.downloads) - parseDownloads(a.downloads))
     },
     {
-      title: "Apps con Seguridad Verificada",
+      title: "🔒 Seguridad Garantizada",
       apps: availableApps.filter(app => app.security === true)
         .sort((a, b) => b.rating - a.rating)
         .slice(0, 10)
     },
     {
-      title: "Apps Recientemente Actualizadas",
+      title: "🆕 Recién Actualizadas",
       apps: [...availableApps].sort((a, b) => {
         const dateA = new Date(app.releaseDate || 0);
         const dateB = new Date(app.releaseDate || 0);
@@ -2291,43 +2291,43 @@ async function displayFeaturedApps() {
       }).slice(0, 8)
     },
     {
-      title: "Apps de Productividad",
+      title: "💼 Impulsa tu Productividad",
       apps: availableApps.filter(app => app.category === 'Productividad')
         .sort((a, b) => b.rating - a.rating)
         .slice(0, 6)
     },
     {
-      title: "Apps de Música y Audio",
+      title: "🎵 Música para tus Oídos",
       apps: availableApps.filter(app => app.category === 'Música')
         .sort((a, b) => parseDownloads(b.downloads) - parseDownloads(a.downloads))
         .slice(0, 6)
     },
     {
-      title: "Apps de Fotografía",
+      title: "📸 Captura el Momento",
       apps: availableApps.filter(app => app.category === 'Fotografía')
         .sort((a, b) => b.rating - a.rating)
         .slice(0, 6)
     },
     {
-      title: "Apps de Viajes",
+      title: "✈️ Explora el Mundo",
       apps: availableApps.filter(app => app.category === 'Viajes')
         .sort((a, b) => b.rating - a.rating)
         .slice(0, 6)
     },
     {
-      title: "Apps de Transporte",
+      title: "🚗 Muévete por la Ciudad",
       apps: availableApps.filter(app => app.category === 'Transporte')
         .sort((a, b) => parseDownloads(b.downloads) - parseDownloads(a.downloads))
         .slice(0, 6)
     },
     {
-      title: "Apps Esenciales",
+      title: "👍 Imprescindibles del Día a Día",
       apps: availableApps.filter(app => 
         ['WhatsApp', 'Instagram', 'YouTube', 'Gmail', 'Google Maps'].includes(app.name)
       ).sort((a, b) => parseDownloads(b.downloads) - parseDownloads(a.downloads))
     },
     {
-      title: "Apps para Gamers",
+      title: "🎮 Zona Gamer",
       apps: availableApps.filter(app => 
         app.category === 'Juegos' || ['Discord', 'Twitch', 'Steam'].includes(app.name)
       ).sort((a, b) => b.rating - a.rating)
