@@ -1,0 +1,233 @@
+/* Modal de Reporte en Pantalla Completa - Estilo PayPal */
+.report-modal-fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: #f5f7fa;
+    z-index: 10000;
+    display: none;
+    overflow-y: auto;
+}
+
+.report-modal-fullscreen.active {
+    display: block;
+    animation: slideInFromRight 0.3s ease-out;
+}
+
+@keyframes slideInFromRight {
+    from {
+        transform: translateX(100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+.report-fullscreen-header {
+    background: linear-gradient(135deg, #0070ba 0%, #003087 100%);
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.report-fullscreen-header h2 {
+    color: white;
+    flex: 1;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.close-report-fullscreen {
+    background: rgba(255, 255, 255, 0.15);
+    border: none;
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 24px;
+    transition: all 0.3s ease;
+}
+
+.close-report-fullscreen:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+.report-fullscreen-body {
+    padding: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.report-section {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+}
+
+.report-section h3 {
+    color: #2c2e2f;
+    font-size: 18px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.report-section p {
+    color: #687173;
+    margin-bottom: 15px;
+    line-height: 1.6;
+}
+
+.report-textarea {
+    width: 100%;
+    min-height: 120px;
+    padding: 15px;
+    border: 2px solid #eaeced;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 14px;
+    resize: vertical;
+    transition: all 0.3s ease;
+}
+
+.report-textarea:focus {
+    outline: none;
+    border-color: #0070ba;
+    box-shadow: 0 0 0 4px rgba(0,112,186,0.1);
+}
+
+.report-word-count {
+    text-align: right;
+    color: #687173;
+    font-size: 13px;
+    margin-top: 8px;
+}
+
+.report-word-count.warning {
+    color: #ff3040;
+    font-weight: 600;
+}
+
+.report-actions-fullscreen {
+    position: sticky;
+    bottom: 0;
+    background: white;
+    padding: 20px;
+    box-shadow: 0 -4px 12px rgba(0,0,0,0.05);
+    display: flex;
+    gap: 15px;
+}
+
+.report-btn-fullscreen {
+    flex: 1;
+    padding: 14px 24px;
+    border-radius: 24px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.report-btn-cancel {
+    background: #f5f7fa;
+    color: #2c2e2f;
+}
+
+.report-btn-cancel:hover {
+    background: #eaeced;
+}
+
+.report-btn-submit {
+    background: #0070ba;
+    color: white;
+}
+
+.report-btn-submit:hover:not(:disabled) {
+    background: #005ea6;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,112,186,0.3);
+}
+
+.report-btn-submit:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+/* Función de Bloquear Usuario */
+.block-option {
+    color: #ff3040;
+}
+
+.block-option:hover {
+    background: rgba(255, 48, 64, 0.1);
+}
+
+.blocked-post {
+    opacity: 0.5;
+    pointer-events: none;
+    position: relative;
+}
+
+.blocked-post::after {
+    content: 'Usuario bloqueado';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+/* Dark Mode */
+body.dark-mode .report-modal-fullscreen {
+    background: #0d1117;
+}
+
+body.dark-mode .report-section {
+    background: #161b22;
+}
+
+body.dark-mode .report-section h3 {
+    color: #e6edf3;
+}
+
+body.dark-mode .report-section p {
+    color: #8b949e;
+}
+
+body.dark-mode .report-textarea {
+    background: #0d1117;
+    border-color: #30363d;
+    color: #e6edf3;
+}
+
+body.dark-mode .report-actions-fullscreen {
+    background: #161b22;
+}
+
+body.dark-mode .report-btn-cancel {
+    background: #21262d;
+    color: #e6edf3;
+}
+
+body.dark-mode .report-btn-cancel:hover {
+    background: #30363d;
+}
