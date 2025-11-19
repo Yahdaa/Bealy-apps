@@ -9,6 +9,12 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function showBlockedUsersSettings() {
+  // Verificar que userBlockSystem existe
+  if (typeof userBlockSystem === 'undefined') {
+    paypalNotify.error('Error', 'Sistema de bloqueo no disponible');
+    return;
+  }
+  
   // Cerrar modal de ajustes
   document.getElementById('settingsModal').style.display = 'none';
   
@@ -140,15 +146,17 @@ function getTimeAgoFromTimestamp(timestamp) {
   return 'hace un momento';
 }
 
-// Sobrescribir función de bloqueo para guardar fecha
-const originalBlockUser = userBlockSystem.blockUser.bind(userBlockSystem);
-userBlockSystem.blockUser = function(userId) {
-  const result = originalBlockUser(userId);
-  if (result) {
-    localStorage.setItem(`blocked_date_${userId}`, Date.now());
-  }
-  return result;
-};
+// Sobrescribir función de bloqueo para guardar fecha cuando esté disponible
+if (typeof userBlockSystem !== 'undefined') {
+  const originalBlockUser = userBlockSystem.blockUser.bind(userBlockSystem);
+  userBlockSystem.blockUser = function(userId) {
+    const result = originalBlockUser(userId);
+    if (result) {
+      localStorage.setItem(`blocked_date_${userId}`, Date.now());
+    }
+    return result;
+  };
+}
 
 // Agregar función de bloqueo a discursos (FAQ/Artículos)
 function renderDiscursosWithBlock(discursos) {
