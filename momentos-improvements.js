@@ -250,13 +250,30 @@ class AppURLSystem {
 // Instanciar sistema de URLs
 const appURLSystem = new AppURLSystem();
 
-// Sobrescribir función original de abrir modal
-const originalOpenAppModal = window.openAppModal;
-window.openAppModal = function(app) {
-  appURLSystem.openAppWithURL(app);
-};
-
-// Sobrescribir función de cerrar modal
-document.getElementById('backButton')?.addEventListener('click', () => {
-  appURLSystem.closeAppModal();
-});
+// Esperar a que el DOM esté listo
+document.addEventListener('DOMContentLoaded', function() {
+  // Guardar referencia a la función original
+  if (typeof openAppModal !== 'undefined') {
+    const originalOpenAppModal = openAppModal;
+    
+    // Sobrescribir función de abrir modal
+    window.openAppModal = function(app) {
+      const appId = app.packageName.replace(/\./g, '-');
+      const url = `${window.location.pathname}?app=${appId}`;
+      
+      // Actualizar URL sin recargar
+      window.history.pushState({ appId: appId }, app.name, url);
+      
+      // Llamar función original
+      originalOpenAppModal(app);
+    };
+  }
+  
+  // Sobrescribir función de cerrar modal
+  const backButton = document.getElementById('backButton');
+  if (backButton) {
+    backButton.addEventListener('click', () => {
+      appURLSystem.closeAppModal();
+    });
+  }
+});}
