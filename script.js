@@ -1812,6 +1812,195 @@ const apps = [{
         "url": "/api/placeholder/200/400"
       }
     ]
+  },
+  {
+    "name": "Spotify",
+    "developer": "Spotify AB",
+    "packageName": "com.spotify.music",
+    "category": "Música",
+    "rating": 4.4,
+    "size": "85 MB",
+    "icon": "https://cdn-icons-png.flaticon.com/512/2111/2111624.png",
+    "description": "Spotify es un servicio de streaming de música que te da acceso a millones de canciones, podcasts y videos.",
+    "downloads": "1B+",
+    "bannerGradient": "45deg, #1DB954, #191414",
+    "security": true,
+    "version": "8.9.0",
+    "isAvailable": true,
+    "releaseDate": "2024-01-15T00:00:00",
+    "allowedCountries": ["US", "CA", "GB", "AU", "NZ", "MX", "BR", "IN", "JP", "DE", "FR", "ES"],
+    "platforms": {
+      "android": "https://play.google.com/store/apps/details?id=com.spotify.music",
+      "ios": "https://apps.apple.com/us/app/spotify/id324684580"
+    },
+    "previousVersions": ["8.8.9", "8.8.8", "8.8.7"],
+    "media": [
+      {"type": "image", "url": "/api/placeholder/200/400"},
+      {"type": "video", "url": "dQw4w9WgXcQ"},
+      {"type": "image", "url": "/api/placeholder/200/400"}
+    ]
+  },
+  {
+    "name": "Amazon Prime Video",
+    "developer": "Amazon Mobile LLC",
+    "packageName": "com.amazon.avod.thirdpartyclient",
+    "category": "Entretenimiento",
+    "rating": 4.3,
+    "size": "95 MB",
+    "icon": "https://cdn-icons-png.flaticon.com/512/5977/5977575.png",
+    "description": "Amazon Prime Video ofrece películas, series y contenido original exclusivo.",
+    "downloads": "500M+",
+    "bannerGradient": "45deg, #00A8E1, #232F3E",
+    "security": true,
+    "version": "3.0.320",
+    "isAvailable": true,
+    "releaseDate": "2024-02-01T00:00:00",
+    "allowedCountries": ["US", "CA", "GB", "AU", "NZ", "MX", "BR", "IN", "JP", "DE", "FR", "ES"],
+    "platforms": {
+      "android": "https://play.google.com/store/apps/details?id=com.amazon.avod.thirdpartyclient",
+      "ios": "https://apps.apple.com/us/app/amazon-prime-video/id545519333"
+    },
+    "previousVersions": ["3.0.319", "3.0.318", "3.0.317"],
+    "media": [
+      {"type": "image", "url": "/api/placeholder/200/400"},
+      {"type": "video", "url": "dQw4w9WgXcQ"},
+      {"type": "image", "url": "/api/placeholder/200/400"}
+    ]
+  },
+  {
+    "name": "Uber",
+    "developer": "Uber Technologies, Inc.",
+    "packageName": "com.ubercab",
+    "category": "Transporte",
+    "rating": 4.2,
+    "size": "120 MB",
+    "icon": "https://cdn-icons-png.flaticon.com/512/732/732200.png",
+    "description": "Uber es la aplicación de transporte que te conecta con conductores en tu ciudad.",
+    "downloads": "500M+",
+    "bannerGradient": "45deg, #000000, #5FB709",
+    "security": true,
+    "version": "4.500.10002",
+    "isAvailable": true,
+    "releaseDate": "2024-03-10T00:00:00",
+    "allowedCountries": ["US", "CA", "GB", "AU", "NZ", "MX", "BR", "IN", "JP", "DE", "FR", "ES"],
+    "platforms": {
+      "android": "https://play.google.com/store/apps/details?id=com.ubercab",
+      "ios": "https://apps.apple.com/us/app/uber/id368677368"
+    },
+    "previousVersions": ["4.499.10002", "4.498.10002", "4.497.10002"],
+    "media": [
+      {"type": "image", "url": "/api/placeholder/200/400"},
+      {"type": "video", "url": "dQw4w9WgXcQ"},
+      {"type": "image", "url": "/api/placeholder/200/400"}
+    ]
+  },
+  {
+    "name": "Airbnb",
+    "developer": "Airbnb, Inc.",
+    "packageName": "com.airbnb.android",
+    "category": "Viajes",
+    "rating": 4.5,
+    "size": "110 MB",
+    "icon": "https://cdn-icons-png.flaticon.com/512/2111/2111320.png",
+    "description": "Airbnb te permite encontrar alojamientos únicos y experiencias en todo el mundo.",
+    "downloads": "100M+",
+    "bannerGradient": "45deg, #FF5A5F, #FC642D",
+    "security": true,
+    "version": "24.02",
+    "isAvailable": true,
+    "releaseDate": "2024-02-20T00:00:00",
+    "allowedCountries": ["US", "CA", "GB", "AU", "NZ", "MX", "BR", "IN", "JP", "DE", "FR", "ES"],
+    "platforms": {
+      "android": "https://play.google.com/store/apps/details?id=com.airbnb.android",
+      "ios": "https://apps.apple.com/us/app/airbnb/id401626263"
+    },
+    "previousVersions": ["24.01", "23.52", "23.51"],
+    "media": [
+      {"type": "image", "url": "/api/placeholder/200/400"},
+      {"type": "video", "url": "dQw4w9WgXcQ"},
+      {"type": "image", "url": "/api/placeholder/200/400"}
+    ]
+  },
+  {
+    "name": "PayPal",
+    "developer": "PayPal Mobile",
+    "packageName": "com.paypal.android.p2pmobile",
+    "category": "Finanzas",
+    "rating": 4.6,
+    "size": "75 MB",
+    "icon": "https://cdn-icons-png.flaticon.com/512/174/174861.png",
+    "description": "PayPal es una plataforma de pagos digitales que te permite enviar y recibir dinero de forma segura.",
+    "downloads": "100M+",
+    "bannerGradient": "45deg, #003087, #009CDE",
+    "security": true,
+    "version": "8.35.0",
+    "isAvailable": true,
+    "releaseDate": "2024-01-25T00:00:00",
+    "allowedCountries": ["US", "CA", "GB", "AU", "NZ", "MX", "BR", "DE", "FR", "ES", "IT"],
+    "platforms": {
+      "android": "https://play.google.com/store/apps/details?id=com.paypal.android.p2pmobile",
+      "ios": "https://apps.apple.com/us/app/paypal/id283646709"
+    },
+    "previousVersions": ["8.34.0", "8.33.0", "8.32.0"],
+    "media": [
+      {"type": "image", "url": "/api/placeholder/200/400"},
+      {"type": "video", "url": "dQw4w9WgXcQ"},
+      {"type": "image", "url": "/api/placeholder/200/400"}
+    ]
+  },
+  {
+    "name": "LinkedIn",
+    "developer": "LinkedIn Corporation",
+    "packageName": "com.linkedin.android",
+    "category": "Redes sociales",
+    "rating": 4.3,
+    "size": "95 MB",
+    "icon": "https://cdn-icons-png.flaticon.com/512/174/174857.png",
+    "description": "LinkedIn es la red social profesional más grande del mundo para conectar con colegas y encontrar oportunidades.",
+    "downloads": "100M+",
+    "bannerGradient": "45deg, #0077B5, #00A0DC",
+    "security": true,
+    "version": "4.1.900",
+    "isAvailable": true,
+    "releaseDate": "2024-03-01T00:00:00",
+    "allowedCountries": ["US", "CA", "GB", "AU", "NZ", "MX", "BR", "IN", "JP", "DE", "FR", "ES"],
+    "platforms": {
+      "android": "https://play.google.com/store/apps/details?id=com.linkedin.android",
+      "ios": "https://apps.apple.com/us/app/linkedin/id288429040"
+    },
+    "previousVersions": ["4.1.899", "4.1.898", "4.1.897"],
+    "media": [
+      {"type": "image", "url": "/api/placeholder/200/400"},
+      {"type": "video", "url": "dQw4w9WgXcQ"},
+      {"type": "image", "url": "/api/placeholder/200/400"}
+    ]
+  },
+  {
+    "name": "Twitter",
+    "developer": "X Corp.",
+    "packageName": "com.twitter.android",
+    "category": "Redes sociales",
+    "rating": 4.1,
+    "size": "105 MB",
+    "icon": "https://cdn-icons-png.flaticon.com/512/733/733579.png",
+    "description": "Twitter es una plataforma de microblogging donde puedes compartir y descubrir lo que está pasando en el mundo.",
+    "downloads": "500M+",
+    "bannerGradient": "45deg, #1DA1F2, #14171A",
+    "security": true,
+    "version": "10.25.0",
+    "isAvailable": true,
+    "releaseDate": "2024-02-15T00:00:00",
+    "allowedCountries": ["US", "CA", "GB", "AU", "NZ", "MX", "BR", "IN", "JP", "DE", "FR", "ES"],
+    "platforms": {
+      "android": "https://play.google.com/store/apps/details?id=com.twitter.android",
+      "ios": "https://apps.apple.com/us/app/twitter/id333903271"
+    },
+    "previousVersions": ["10.24.0", "10.23.0", "10.22.0"],
+    "media": [
+      {"type": "image", "url": "/api/placeholder/200/400"},
+      {"type": "video", "url": "dQw4w9WgXcQ"},
+      {"type": "image", "url": "/api/placeholder/200/400"}
+    ]
   }
 ];
 
