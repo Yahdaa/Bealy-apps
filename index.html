@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Veraxa</title>
     <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./faq-styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     
@@ -294,23 +295,143 @@
                 <input type="text" id="faqSearch" placeholder="Buscar artículos...">
             </div>
             <div class="faq-body">
-                <div class="faq-item" onclick="showFaqArticle('about')">
-                    <h3>¿Qué es BeApp?</h3>
-                    <i class="fas fa-chevron-right"></i>
+                <div class="faq-category">
+                    <h3 class="category-title"><i class="fas fa-info-circle"></i> Información General</h3>
+                    <div class="faq-item" onclick="showFaqArticle('about')">
+                        <div class="faq-item-content">
+                            <h4>¿Qué es Veraxa?</h4>
+                            <p>Conoce nuestra plataforma</p>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div class="faq-item" onclick="showFaqArticle('features')">
+                        <div class="faq-item-content">
+                            <h4>Características principales</h4>
+                            <p>Descubre lo que ofrecemos</p>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div class="faq-item" onclick="showFaqArticle('security')">
+                        <div class="faq-item-content">
+                            <h4>Seguridad y privacidad</h4>
+                            <p>Cómo protegemos tus datos</p>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
                 </div>
-                <div class="faq-item">
-                    <h3>¿Cómo instalar aplicaciones?</h3>
-                    <i class="fas fa-chevron-right"></i>
+
+                <div class="faq-category">
+                    <h3 class="category-title"><i class="fas fa-download"></i> Instalación y Uso</h3>
+                    <div class="faq-item" onclick="showFaqArticle('install')">
+                        <div class="faq-item-content">
+                            <h4>¿Cómo instalar aplicaciones?</h4>
+                            <p>Guía paso a paso</p>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div class="faq-item" onclick="showFaqArticle('update')">
+                        <div class="faq-item-content">
+                            <h4>Actualizar aplicaciones</h4>
+                            <p>Mantén tus apps al día</p>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div class="faq-item" onclick="showFaqArticle('uninstall')">
+                        <div class="faq-item-content">
+                            <h4>Desinstalar aplicaciones</h4>
+                            <p>Elimina apps que no uses</p>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
                 </div>
-                <div class="faq-item">
-                    <h3>Problemas comunes</h3>
-                    <i class="fas fa-chevron-right"></i>
+
+                <div class="faq-category">
+                    <h3 class="category-title"><i class="fas fa-exclamation-triangle"></i> Solución de Problemas</h3>
+                    <div class="faq-item" onclick="showFaqArticle('errors')">
+                        <div class="faq-item-content">
+                            <h4>Errores comunes</h4>
+                            <p>Soluciones rápidas</p>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div class="faq-item" onclick="showFaqArticle('compatibility')">
+                        <div class="faq-item-content">
+                            <h4>Problemas de compatibilidad</h4>
+                            <p>Apps que no funcionan</p>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div class="faq-item" onclick="showFaqArticle('performance')">
+                        <div class="faq-item-content">
+                            <h4>Mejorar rendimiento</h4>
+                            <p>Optimiza tu experiencia</p>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+
+                <div class="faq-category">
+                    <h3 class="category-title"><i class="fas fa-question-circle"></i> Cuenta y Configuración</h3>
+                    <div class="faq-item" onclick="showFaqArticle('account')">
+                        <div class="faq-item-content">
+                            <h4>Gestionar tu cuenta</h4>
+                            <p>Perfil y configuración</p>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div class="faq-item" onclick="showFaqArticle('notifications')">
+                        <div class="faq-item-content">
+                            <h4>Notificaciones</h4>
+                            <p>Controla tus alertas</p>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     
+
+    <!-- Modal de Artículo FAQ con Discursos -->
+    <div class="article-modal" id="articleModal">
+        <div class="article-content">
+            <div class="article-header">
+                <button class="back-to-faq" onclick="backToFaq()">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <h2 id="articleTitle">Artículo</h2>
+            </div>
+            <div class="article-body" id="articleBody">
+                <!-- Contenido del artículo -->
+            </div>
+            
+            <!-- Sección de Discursos -->
+            <div class="discursos-section">
+                <div class="discursos-header">
+                    <h3><i class="fas fa-comments"></i> Discursos</h3>
+                    <span class="discursos-count" id="discursosCount">0 comentarios</span>
+                </div>
+                
+                <div class="new-discurso-form">
+                    <textarea id="discursoInput" placeholder="Comparte tu opinión sobre este artículo..." maxlength="280"></textarea>
+                    <div class="discurso-actions">
+                        <span class="char-count" id="discursoCharCount">280</span>
+                        <button class="publish-discurso-btn" id="publishDiscursoBtn" disabled>
+                            <i class="fas fa-paper-plane"></i> Publicar
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="discursos-feed" id="discursosFeed">
+                    <div class="loading-discursos">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>Cargando discursos...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Modal de Chat de Soporte -->
     <div class="support-chat-modal" id="supportChatModal">
@@ -515,5 +636,6 @@
 
     <!-- JavaScript principal -->
     <script src="./script.js?v=2.0"></script>
+    <script src="./faq-discursos.js"></script>
 </body>
 </html>
