@@ -41,7 +41,7 @@
     </div>
 
     <!-- Contenedor del aviso inicial (oculto por defecto cuando mantenimiento está activo) -->
-    <div class="aviso-container hidden" id="aviso">
+    <div class="aviso-container hidden" id="aviso" style="display: none;">
         <div class="slider">
             <!-- Slide 1: Aviso sobre enlaces -->
             <div class="slide" id="slide1">
@@ -500,11 +500,13 @@
                 });
             }
 
-            // Si el aviso ya se mostró antes, lo ocultamos
-            if (localStorage.getItem("avisoMostrado")) {
-                const aviso = document.getElementById("aviso");
-                if (aviso) aviso.classList.add("hidden");
+            // Ocultar aviso siempre
+            const aviso = document.getElementById("aviso");
+            if (aviso) {
+                aviso.style.display = "none";
+                aviso.classList.add("hidden");
             }
+            localStorage.setItem("avisoMostrado", "true");
 
             // Inicializar el primer slide
             updateSlide();

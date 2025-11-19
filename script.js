@@ -153,24 +153,8 @@ async function detectCountry() {
 
 // Función mejorada para filtrar apps por país
 async function filterAppsByCountry(appsToFilter) {
-  try {
-    const userCountry = await detectCountry();
-    const filteredApps = appsToFilter.filter(app => {
-      const isAvailable = app.allowedCountries.includes('Global') ||
-                         app.allowedCountries.includes(userCountry);
-
-      if (!isAvailable) {
-        console.log(`App ${app.name} no disponible en ${userCountry}`);
-      }
-
-      return isAvailable;
-    });
-
-    return filteredApps;
-  } catch (error) {
-    console.error('Error filtrando apps por país:', error);
-    return appsToFilter;
-  }
+  // Desactivado - mostrar todas las apps
+  return appsToFilter;
 }
 
 // Función mejorada para verificar si una app está disponible basada en su fecha de lanzamiento
@@ -2027,13 +2011,8 @@ type: "image", "url": "/api/placeholder/200/400"}
 
 // Nueva función para filtrar apps por país
 async function filterAppsByCountry(appsToFilter) {
-  try {
-    const userCountry = await detectCountry();
-    return appsToFilter.filter(app => app.allowedCountries.includes(userCountry));
-  } catch (error) {
-    console.error('Error filtering apps by country:', error);
-    return appsToFilter;
-  }
+  // Desactivado - mostrar todas las apps
+  return appsToFilter;
 }
 
 function parseDownloads(downloads) {
