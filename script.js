@@ -1835,9 +1835,12 @@ const apps = [{
     },
     "previousVersions": ["8.8.9", "8.8.8", "8.8.7"],
     "media": [
-      {"type": "image", "url": "/api/placeholder/200/400"},
-      {"type": "video", "url": "dQw4w9WgXcQ"},
-      {"type": "image", "url": "/api/placeholder/200/400"}
+      {
+type: "image", "url": "/api/placeholder/200/400"},
+      {
+type: "video", "url": "dQw4w9WgXcQ"},
+      {
+type: "image", "url": "/api/placeholder/200/400"}
     ]
   },
   {
@@ -1862,9 +1865,12 @@ const apps = [{
     },
     "previousVersions": ["3.0.319", "3.0.318", "3.0.317"],
     "media": [
-      {"type": "image", "url": "/api/placeholder/200/400"},
-      {"type": "video", "url": "dQw4w9WgXcQ"},
-      {"type": "image", "url": "/api/placeholder/200/400"}
+      {
+type: "image", "url": "/api/placeholder/200/400"},
+      {
+type: "video", "url": "dQw4w9WgXcQ"},
+      {
+type: "image", "url": "/api/placeholder/200/400"}
     ]
   },
   {
@@ -1889,9 +1895,12 @@ const apps = [{
     },
     "previousVersions": ["4.499.10002", "4.498.10002", "4.497.10002"],
     "media": [
-      {"type": "image", "url": "/api/placeholder/200/400"},
-      {"type": "video", "url": "dQw4w9WgXcQ"},
-      {"type": "image", "url": "/api/placeholder/200/400"}
+      {
+type: "image", "url": "/api/placeholder/200/400"},
+      {
+type: "video", "url": "dQw4w9WgXcQ"},
+      {
+type: "image", "url": "/api/placeholder/200/400"}
     ]
   },
   {
@@ -1916,9 +1925,12 @@ const apps = [{
     },
     "previousVersions": ["24.01", "23.52", "23.51"],
     "media": [
-      {"type": "image", "url": "/api/placeholder/200/400"},
-      {"type": "video", "url": "dQw4w9WgXcQ"},
-      {"type": "image", "url": "/api/placeholder/200/400"}
+      {
+type: "image", "url": "/api/placeholder/200/400"},
+      {
+type: "video", "url": "dQw4w9WgXcQ"},
+      {
+type: "image", "url": "/api/placeholder/200/400"}
     ]
   },
   {
@@ -1943,9 +1955,12 @@ const apps = [{
     },
     "previousVersions": ["8.34.0", "8.33.0", "8.32.0"],
     "media": [
-      {"type": "image", "url": "/api/placeholder/200/400"},
-      {"type": "video", "url": "dQw4w9WgXcQ"},
-      {"type": "image", "url": "/api/placeholder/200/400"}
+      {
+type: "image", "url": "/api/placeholder/200/400"},
+      {
+type: "video", "url": "dQw4w9WgXcQ"},
+      {
+type: "image", "url": "/api/placeholder/200/400"}
     ]
   },
   {
@@ -1970,9 +1985,12 @@ const apps = [{
     },
     "previousVersions": ["4.1.899", "4.1.898", "4.1.897"],
     "media": [
-      {"type": "image", "url": "/api/placeholder/200/400"},
-      {"type": "video", "url": "dQw4w9WgXcQ"},
-      {"type": "image", "url": "/api/placeholder/200/400"}
+      {
+type: "image", "url": "/api/placeholder/200/400"},
+      {
+type: "video", "url": "dQw4w9WgXcQ"},
+      {
+type: "image", "url": "/api/placeholder/200/400"}
     ]
   },
   {
@@ -1997,9 +2015,12 @@ const apps = [{
     },
     "previousVersions": ["10.24.0", "10.23.0", "10.22.0"],
     "media": [
-      {"type": "image", "url": "/api/placeholder/200/400"},
-      {"type": "video", "url": "dQw4w9WgXcQ"},
-      {"type": "image", "url": "/api/placeholder/200/400"}
+      {
+type: "image", "url": "/api/placeholder/200/400"},
+      {
+type: "video", "url": "dQw4w9WgXcQ"},
+      {
+type: "image", "url": "/api/placeholder/200/400"}
     ]
   }
 ];
