@@ -4796,6 +4796,21 @@ class MomentosSystem {
             <div class="username">${post.author}</div>
             <div class="post-time">${timeAgo}</div>
           </div>
+          <div class="post-menu">
+            <button class="post-menu-btn" data-post-id="${post.id}">
+              <i class="fas fa-ellipsis-v"></i>
+            </button>
+            <div class="post-menu-dropdown" id="menu-${post.id}" style="display: none;">
+              ${post.author === this.currentUser.id ? `
+                <button class="menu-option delete-option" data-post-id="${post.id}">
+                  <i class="fas fa-trash"></i> Eliminar
+                </button>
+              ` : ''}
+              <button class="menu-option report-option" data-post-id="${post.id}">
+                <i class="fas fa-flag"></i> Reportar
+              </button>
+            </div>
+          </div>
         </div>
 
         <div class="post-content">${post.content}</div>
@@ -4900,6 +4915,33 @@ class MomentosSystem {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
         this.sharePost();
+      });
+    });
+
+    // Menu buttons
+    document.querySelectorAll('.post-menu-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const postId = btn.dataset.postId;
+        this.togglePostMenu(postId);
+      });
+    });
+
+    // Delete buttons
+    document.querySelectorAll('.delete-option').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const postId = btn.dataset.postId;
+        this.deletePost(postId);
+      });
+    });
+
+    // Report buttons
+    document.querySelectorAll('.report-option').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const postId = btn.dataset.postId;
+        this.reportPost(postId);
       });
     });
   }
@@ -5034,6 +5076,83 @@ class MomentosSystem {
     } else {
       navigator.clipboard.writeText(window.location.href);
       this.showNotification('¡Enlace copiado!');
+    }
+  }
+
+  togglePostMenu(postId) {
+    const menu = document.getElementById(`menu-${postId}`);
+    const allMenus = document.querySelectorAll('.post-menu-dropdown');
+    allMenus.forEach(m => {
+      if (m.id !== `menu-${postId}`) m.style.display = 'none';
+    });
+    menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+  }
+
+  async deletePost(postId) {
+    if (!confirm('¿Estás seguro de que quieres eliminar este momento?')) return;
+
+    try {
+      await database.ref(`momentos/${postId}`).remove();
+      this.showNotification('Momento eliminado');
+      this.loadPosts();
+    } catch (error) {
+      console.error('Error eliminando momento:', error);
+      this.showNotification('Error al eliminar', true);
+    }
+  }
+
+  reportPost(postId) {
+    const modal = document.createElement('div');
+    modal.className = 'report-modal active';
+    modal.innerHTML = `
+      <div class="report-content">
+        <div class="report-header">
+          <h3>Reportar Momento</h3>
+          <button class="close-report" onclick="this.closest('.report-modal').remove()">×</button>
+        </div>
+        <div class="report-body">
+          <p>Explica brevemente el problema (máximo 30 palabras):</p>
+          <textarea id="reportReason" maxlength="200" placeholder="Describe el problema..."></textarea>
+          <div class="word-count"><span id="wordCount">0</span>/30 palabras</div>
+        </div>
+        <div class="report-actions">
+          <button class="cancel-btn" onclick="this.closest('.report-modal').remove()">Cancelar</button>
+          <button class="submit-btn" onclick="momentosSystem.submitReport('${postId}')">Enviar Reporte</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    const textarea = modal.querySelector('#reportReason');
+    const wordCountSpan = modal.querySelector('#wordCount');
+    const submitBtn = modal.querySelector('.submit-btn');
+
+    textarea.addEventListener('input', () => {
+      const words = textarea.value.trim().split(/\s+/).filter(w => w.length > 0);
+      wordCountSpan.textContent = words.length;
+      submitBtn.disabled = words.length === 0 || words.length > 30;
+    });
+  }
+
+  async submitReport(postId) {
+    const modal = document.querySelector('.report-modal');
+    const reason = modal.querySelector('#reportReason').value.trim();
+
+    if (!reason) return;
+
+    try {
+      await database.ref('reports').push({
+        postId: postId,
+        reason: reason,
+        reportedBy: this.currentUser.id,
+        timestamp: Date.now()
+      });
+
+      modal.remove();
+      this.showNotification('Reporte enviado. Gracias por tu colaboración.');
+    } catch (error) {
+      console.error('Error enviando reporte:', error);
+      this.showNotification('Error al enviar reporte', true);
     }
   }
 

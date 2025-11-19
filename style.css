@@ -7045,3 +7045,240 @@ body.dark-mode .success-content {
         grid-template-columns: 1fr;
     }
 }
+
+/* Post Menu Styles */
+.post-menu {
+  position: relative;
+}
+
+.post-menu-btn {
+  background: none;
+  border: none;
+  color: #687173;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.post-menu-btn:hover {
+  background: #f5f7fa;
+  color: #0070ba;
+}
+
+.post-menu-dropdown {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  min-width: 150px;
+  z-index: 100;
+  overflow: hidden;
+}
+
+.menu-option {
+  width: 100%;
+  padding: 12px 16px;
+  border: none;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background 0.2s ease;
+  color: #2c2e2f;
+  font-size: 14px;
+}
+
+.menu-option:hover {
+  background: #f5f7fa;
+}
+
+.menu-option.delete-option {
+  color: #d32f2f;
+}
+
+.menu-option.delete-option:hover {
+  background: #ffebee;
+}
+
+body.dark-mode .post-menu-dropdown {
+  background: #161b22;
+  border: 1px solid #30363d;
+}
+
+body.dark-mode .menu-option {
+  color: #e6edf3;
+}
+
+body.dark-mode .menu-option:hover {
+  background: #1c2128;
+}
+
+body.dark-mode .menu-option.delete-option:hover {
+  background: #2d1517;
+}
+
+/* Report Modal Styles */
+.report-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+}
+
+.report-modal.active {
+  display: flex;
+}
+
+.report-content {
+  background: white;
+  border-radius: 12px;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+
+.report-header {
+  padding: 20px;
+  border-bottom: 1px solid #eaeced;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, #0070ba 0%, #003087 100%);
+  border-radius: 12px 12px 0 0;
+}
+
+.report-header h3 {
+  color: white;
+  margin: 0;
+  font-size: 18px;
+}
+
+.close-report {
+  background: rgba(255,255,255,0.2);
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.close-report:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+.report-body {
+  padding: 20px;
+}
+
+.report-body p {
+  margin-bottom: 10px;
+  color: #2c2e2f;
+}
+
+.report-body textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 12px;
+  border: 2px solid #eaeced;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 14px;
+  resize: vertical;
+  transition: border-color 0.3s ease;
+}
+
+.report-body textarea:focus {
+  outline: none;
+  border-color: #0070ba;
+}
+
+.word-count {
+  text-align: right;
+  font-size: 12px;
+  color: #687173;
+  margin-top: 5px;
+}
+
+.report-actions {
+  padding: 15px 20px;
+  border-top: 1px solid #eaeced;
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.report-actions button {
+  padding: 10px 20px;
+  border-radius: 24px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.cancel-btn {
+  background: #f5f7fa;
+  color: #2c2e2f;
+}
+
+.cancel-btn:hover {
+  background: #eaeced;
+}
+
+.submit-btn {
+  background: #0070ba;
+  color: white;
+}
+
+.submit-btn:hover {
+  background: #005ea6;
+}
+
+.submit-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+body.dark-mode .report-content {
+  background: #161b22;
+}
+
+body.dark-mode .report-body p {
+  color: #e6edf3;
+}
+
+body.dark-mode .report-body textarea {
+  background: #0d1117;
+  border-color: #30363d;
+  color: #e6edf3;
+}
+
+body.dark-mode .report-actions {
+  border-top-color: #30363d;
+}
+
+body.dark-mode .cancel-btn {
+  background: #21262d;
+  color: #e6edf3;
+}
+
+body.dark-mode .cancel-btn:hover {
+  background: #30363d;
+}
