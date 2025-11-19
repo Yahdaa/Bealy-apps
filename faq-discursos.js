@@ -205,8 +205,18 @@ function showFaqArticle(articleId) {
 }
 
 function backToFaq() {
-  document.getElementById('articleModal').classList.remove('active');
-  document.getElementById('faqModal').style.display = 'block';
+  const articleModal = document.getElementById('articleModal');
+  const faqModal = document.getElementById('faqModal');
+  
+  if (articleModal) {
+    articleModal.classList.remove('active');
+    articleModal.style.display = 'none';
+  }
+  
+  if (faqModal) {
+    faqModal.style.display = 'block';
+  }
+  
   currentArticleId = null;
 }
 
@@ -235,8 +245,10 @@ function renderDiscursos(discursos) {
     return;
   }
   
+  const currentUserId = momentosSystem ? momentosSystem.currentUser.id : null;
+  
   feed.innerHTML = discursos.map(d => `
-    <div class="discurso-card post-card">
+    <div class="discurso-card post-card" data-discurso-id="${d.id}">
       <div class="post-header">
         <div class="user-avatar" style="background: ${d.authorColor}">
           ${d.author.substring(5, 7).toUpperCase()}
@@ -245,10 +257,127 @@ function renderDiscursos(discursos) {
           <div class="username">${d.author}</div>
           <div class="post-time">${getTimeAgo(d.timestamp)}</div>
         </div>
+        <div class="post-menu">
+          <button class="post-menu-btn" onclick="toggleDiscursoMenu('${d.id}')">
+            <i class="fas fa-ellipsis-v"></i>
+          </button>
+          <div class="post-menu-dropdown" id="discurso-menu-${d.id}" style="display: none;">
+            ${d.author === currentUserId ? `
+              <button class="menu-option delete-option" onclick="deleteDiscurso('${d.id}')">
+                <i class="fas fa-trash"></i> Eliminar
+              </button>
+            ` : ''}
+            <button class="menu-option report-option" onclick="reportDiscurso('${d.id}')">
+              <i class="fas fa-flag"></i> Reportar
+            </button>
+          </div>
+        </div>
       </div>
       <div class="post-content">${d.content}</div>
     </div>
   `).join('');
+}
+
+function toggleDiscursoMenu(discursoId) {
+  const menu = document.getElementById(`discurso-menu-${discursoId}`);
+  const allMenus = document.querySelectorAll('.post-menu-dropdown');
+  
+  allMenus.forEach(m => {
+    if (m.id !== `discurso-menu-${discursoId}`) {
+      m.style.display = 'none';
+    }
+  });
+  
+  if (menu) {
+    menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+  }
+}
+
+async function deleteDiscurso(discursoId) {
+  if (!confirm('¿Estás seguro de que quieres eliminar este comentario?')) return;
+  
+  if (!currentArticleId) return;
+  
+  try {
+    await database.ref(`discursos/${currentArticleId}/${discursoId}`).remove();
+    showNotificationMessage('Comentario eliminado');
+  } catch (error) {
+    console.error('Error eliminando discurso:', error);
+    showNotificationMessage('Error al eliminar', true);
+  }
+}
+
+function reportDiscurso(discursoId) {
+  const modal = document.createElement('div');
+  modal.className = 'report-modal active';
+  modal.innerHTML = `
+    <div class="report-content">
+      <div class="report-header">
+        <h3>Reportar Comentario</h3>
+        <button class="close-report" onclick="this.closest('.report-modal').remove()">×</button>
+      </div>
+      <div class="report-body">
+        <p>Explica brevemente el problema (máximo 30 palabras):</p>
+        <textarea id="reportDiscursoReason" maxlength="200" placeholder="Describe el problema..."></textarea>
+        <div class="word-count"><span id="discursoWordCount">0</span>/30 palabras</div>
+      </div>
+      <div class="report-actions">
+        <button class="cancel-btn" onclick="this.closest('.report-modal').remove()">Cancelar</button>
+        <button class="submit-btn" id="submitDiscursoReport" onclick="submitDiscursoReport('${discursoId}')">Enviar Reporte</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+  
+  const textarea = modal.querySelector('#reportDiscursoReason');
+  const wordCountSpan = modal.querySelector('#discursoWordCount');
+  const submitBtn = modal.querySelector('#submitDiscursoReport');
+  
+  textarea.addEventListener('input', () => {
+    const words = textarea.value.trim().split(/\s+/).filter(w => w.length > 0);
+    wordCountSpan.textContent = words.length;
+    submitBtn.disabled = words.length === 0 || words.length > 30;
+  });
+}
+
+async function submitDiscursoReport(discursoId) {
+  const modal = document.querySelector('.report-modal');
+  const reason = modal.querySelector('#reportDiscursoReason').value.trim();
+  
+  if (!reason || !currentArticleId) return;
+  
+  try {
+    await database.ref('discurso-reports').push({
+      articleId: currentArticleId,
+      discursoId: discursoId,
+      reason: reason,
+      reportedBy: momentosSystem.currentUser.id,
+      timestamp: Date.now()
+    });
+    
+    modal.remove();
+    showNotificationMessage('Reporte enviado. Gracias por tu colaboración.');
+  } catch (error) {
+    console.error('Error enviando reporte:', error);
+    showNotificationMessage('Error al enviar reporte', true);
+  }
+}
+
+function showNotificationMessage(message, isError = false) {
+  const notification = document.createElement('div');
+  notification.className = 'notification-popup show';
+  notification.style.background = isError ? '#ff3040' : '#30d158';
+  notification.innerHTML = `
+    <i class="fas fa-${isError ? 'exclamation-triangle' : 'check'}"></i>
+    <span>${message}</span>
+  `;
+  
+  document.body.appendChild(notification);
+  
+  setTimeout(() => {
+    notification.classList.remove('show');
+    setTimeout(() => notification.remove(), 300);
+  }, 3000);
 }
 
 function getTimeAgo(timestamp) {

@@ -25,20 +25,24 @@ body.dark-mode .faq-modal {
     padding: 20px;
     background: white;
     border-bottom: 1px solid #eaeced;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    position: relative;
 }
 
 .faq-search i {
+    position: absolute;
+    left: 35px;
+    top: 50%;
+    transform: translateY(-50%);
     color: #0070ba;
     font-size: 18px;
+    pointer-events: none;
+    z-index: 1;
 }
 
 .faq-search input {
-    flex: 1;
+    width: 100%;
     border: 2px solid #eaeced;
-    padding: 12px;
+    padding: 12px 12px 12px 45px;
     border-radius: 24px;
     font-size: 14px;
     transition: all 0.3s ease;
