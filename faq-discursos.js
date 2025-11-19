@@ -247,7 +247,15 @@ function renderDiscursos(discursos) {
   
   const currentUserId = momentosSystem ? momentosSystem.currentUser.id : null;
   
-  feed.innerHTML = discursos.map(d => `
+  // Filtrar discursos de usuarios bloqueados
+  const filteredDiscursos = discursos.filter(d => !userBlockSystem.isBlocked(d.author));
+  
+  if (filteredDiscursos.length === 0) {
+    feed.innerHTML = '<div class="loading-discursos"><i class="fas fa-user-slash"></i><p>Todos los comentarios son de usuarios bloqueados</p></div>';
+    return;
+  }
+  
+  feed.innerHTML = filteredDiscursos.map(d => `
     <div class="discurso-card post-card" data-discurso-id="${d.id}">
       <div class="post-header">
         <div class="user-avatar" style="background: ${d.authorColor}">
@@ -266,7 +274,11 @@ function renderDiscursos(discursos) {
               <button class="menu-option delete-option" onclick="deleteDiscurso('${d.id}')">
                 <i class="fas fa-trash"></i> Eliminar
               </button>
-            ` : ''}
+            ` : `
+              <button class="menu-option block-option" onclick="blockUserFromDiscurso('${d.author}')">
+                <i class="fas fa-ban"></i> Bloquear usuario
+              </button>
+            `}
             <button class="menu-option report-option" onclick="reportDiscurso('${d.id}')">
               <i class="fas fa-flag"></i> Reportar
             </button>
@@ -276,6 +288,18 @@ function renderDiscursos(discursos) {
       <div class="post-content">${d.content}</div>
     </div>
   `).join('');
+}
+
+function blockUserFromDiscurso(userId) {
+  if (confirm('¿Estás seguro de que quieres bloquear a este usuario? No verás más sus comentarios.')) {
+    userBlockSystem.blockUser(userId);
+    showNotificationMessage('Usuario bloqueado exitosamente');
+    
+    // Recargar discursos
+    if (currentArticleId) {
+      loadDiscursos(currentArticleId);
+    }
+  }
 }
 
 function toggleDiscursoMenu(discursoId) {
