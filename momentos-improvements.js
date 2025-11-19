@@ -177,23 +177,22 @@ async function blockUserDirectly(userId) {
   }
 }
 
-// Sistema de URLs únicas para aplicaciones
+// Sistema de URLs únicas para aplicaciones - DESACTIVADO TEMPORALMENTE
+// Se activará cuando se solucionen los conflictos
+
+/*
 class AppURLSystem {
   constructor() {
     this.initURLHandling();
   }
 
   initURLHandling() {
-    // Manejar cambios en la URL
     window.addEventListener('popstate', (e) => {
       if (e.state && e.state.appId) {
         this.openAppFromURL(e.state.appId);
-      } else {
-        this.closeAppModal();
       }
     });
 
-    // Verificar URL al cargar
     this.checkInitialURL();
   }
 
@@ -206,74 +205,15 @@ class AppURLSystem {
     }
   }
 
-  generateAppURL(app) {
-    // Generar ID único basado en packageName
-    const appId = app.packageName.replace(/\./g, '-');
-    return `?app=${appId}`;
-  }
-
-  openAppWithURL(app) {
-    const appId = app.packageName.replace(/\./g, '-');
-    const url = `${window.location.pathname}?app=${appId}`;
-    
-    // Actualizar URL sin recargar
-    window.history.pushState({ appId: appId }, app.name, url);
-    
-    // Abrir modal
-    openAppModal(app);
-  }
-
   openAppFromURL(appId) {
-    // Convertir ID de vuelta a packageName
     const packageName = appId.replace(/-/g, '.');
-    
-    // Buscar app
     const app = apps.find(a => a.packageName === packageName);
     
-    if (app) {
+    if (app && typeof openAppModal !== 'undefined') {
       openAppModal(app);
     }
   }
-
-  closeAppModal() {
-    // Cerrar modal y limpiar URL
-    const modal = document.getElementById('appModal');
-    if (modal) {
-      modal.classList.remove('active');
-    }
-    
-    // Restaurar URL original
-    window.history.pushState({}, document.title, window.location.pathname);
-  }
 }
 
-// Instanciar sistema de URLs
 const appURLSystem = new AppURLSystem();
-
-// Esperar a que el DOM esté listo
-document.addEventListener('DOMContentLoaded', function() {
-  // Guardar referencia a la función original
-  if (typeof openAppModal !== 'undefined') {
-    const originalOpenAppModal = openAppModal;
-    
-    // Sobrescribir función de abrir modal
-    window.openAppModal = function(app) {
-      const appId = app.packageName.replace(/\./g, '-');
-      const url = `${window.location.pathname}?app=${appId}`;
-      
-      // Actualizar URL sin recargar
-      window.history.pushState({ appId: appId }, app.name, url);
-      
-      // Llamar función original
-      originalOpenAppModal(app);
-    };
-  }
-  
-  // Sobrescribir función de cerrar modal
-  const backButton = document.getElementById('backButton');
-  if (backButton) {
-    backButton.addEventListener('click', () => {
-      appURLSystem.closeAppModal();
-    });
-  }
-});}
+*/}

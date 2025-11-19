@@ -1,5 +1,13 @@
 // Sistema de Gestión de Usuarios Bloqueados en Ajustes
 
+// Agregar event listener cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', function() {
+  const blockedUsersBtn = document.getElementById('blockedUsersSettingsBtn');
+  if (blockedUsersBtn) {
+    blockedUsersBtn.addEventListener('click', showBlockedUsersSettings);
+  }
+});
+
 function showBlockedUsersSettings() {
   // Cerrar modal de ajustes
   document.getElementById('settingsModal').style.display = 'none';
