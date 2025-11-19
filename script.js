@@ -3102,33 +3102,108 @@ async function displayApps(appsToDisplay) {
 
 // Event Listeners
 // Add loading animation during search
-document.getElementById('searchInput').addEventListener('input', async (e) => {
-  const searchTerm = e.target.value.toLowerCase();
-  const appsContainer = document.getElementById('appsContainer');
+// Nueva funcionalidad de búsqueda
+const searchSection = document.getElementById('searchSection');
+const searchInputNew = document.getElementById('searchInputNew');
+const backSearchBtn = document.getElementById('backSearchBtn');
+const clearSearchBtn = document.getElementById('clearSearchBtn');
+const searchSuggestions = document.getElementById('searchSuggestions');
+const searchResults = document.getElementById('searchResults');
+const searchResultsGrid = document.getElementById('searchResultsGrid');
+const noResults = document.getElementById('noResults');
+const resultsCount = document.getElementById('resultsCount');
 
-  if (searchTerm) {
-    // Show loading animation
-    appsContainer.innerHTML = `
-      <div class="loading-container">
-        <div class="loading-spinner"></div>
-        <p>Buscando aplicaciones...</p>
-      </div>
-    `;
-    appsContainer.style.display = 'block';
-    document.getElementById('featuredApps').style.display = 'none';
+// Abrir sección de búsqueda
+document.querySelector('.search-toggle').addEventListener('click', () => {
+    searchSection.classList.add('active');
+    setTimeout(() => searchInputNew.focus(), 400);
+});
 
-    // Simulate search delay
-    await new Promise(resolve => setTimeout(resolve, 800));
+// Cerrar sección de búsqueda
+backSearchBtn.addEventListener('click', () => {
+    searchSection.classList.remove('active');
+    searchInputNew.value = '';
+    clearSearchBtn.classList.remove('show');
+    searchSuggestions.style.display = 'block';
+    searchResults.style.display = 'none';
+    noResults.style.display = 'none';
+});
 
+// Limpiar búsqueda
+clearSearchBtn.addEventListener('click', () => {
+    searchInputNew.value = '';
+    clearSearchBtn.classList.remove('show');
+    searchSuggestions.style.display = 'block';
+    searchResults.style.display = 'none';
+    noResults.style.display = 'none';
+    searchInputNew.focus();
+});
+
+// Búsqueda en tiempo real
+searchInputNew.addEventListener('input', async (e) => {
+    const searchTerm = e.target.value.trim();
+    
+    // Mostrar/ocultar botón de limpiar
+    if (searchTerm) {
+        clearSearchBtn.classList.add('show');
+    } else {
+        clearSearchBtn.classList.remove('show');
+        searchSuggestions.style.display = 'block';
+        searchResults.style.display = 'none';
+        noResults.style.display = 'none';
+        return;
+    }
+    
+    // Filtrar aplicaciones
     const filteredApps = apps.filter(app =>
-      app.name.toLowerCase().includes(searchTerm) ||
-      app.developer.toLowerCase().includes(searchTerm) ||
-      app.category.toLowerCase().includes(searchTerm)
+        app.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        app.developer.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        app.category.toLowerCase().includes(searchTerm.toLowerCase())
     );
-    await displayApps(filteredApps);
-  } else {
-    await displayFeaturedApps();
-  }
+    
+    // Mostrar resultados
+    searchSuggestions.style.display = 'none';
+    
+    if (filteredApps.length > 0) {
+        searchResults.style.display = 'block';
+        noResults.style.display = 'none';
+        resultsCount.textContent = filteredApps.length;
+        
+        searchResultsGrid.innerHTML = filteredApps.map(app => `
+            <div class="search-result-card" data-app-name="${app.name}">
+                <img src="${app.icon}" alt="${app.name}" class="search-result-icon" onerror="this.src='https://via.placeholder.com/56x56?text=${app.name.charAt(0)}'">
+                <div class="search-result-info">
+                    <div class="search-result-name">${app.name}</div>
+                    <div class="search-result-developer">${app.developer}</div>
+                    <span class="search-result-category">${app.category}</span>
+                </div>
+            </div>
+        `).join('');
+        
+        // Agregar event listeners a los resultados
+        document.querySelectorAll('.search-result-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const appName = card.getAttribute('data-app-name');
+                const app = apps.find(a => a.name === appName);
+                if (app) {
+                    searchSection.classList.remove('active');
+                    openAppModalWithAnimation(app, card);
+                }
+            });
+        });
+    } else {
+        searchResults.style.display = 'none';
+        noResults.style.display = 'block';
+    }
+});
+
+// Chips de sugerencias
+document.querySelectorAll('.suggestion-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+        const category = chip.getAttribute('data-category');
+        searchInputNew.value = category;
+        searchInputNew.dispatchEvent(new Event('input'));
+    });
 });
 
 document.getElementById('backButton').addEventListener('click', () => {
@@ -3559,10 +3634,7 @@ document.getElementById('faqSearch')?.addEventListener('input', (e) => {
     });
 });
 
-// Función para mostrar/ocultar la barra de búsqueda
-document.querySelector('.search-toggle').addEventListener('click', () => {
-    document.querySelector('.search-container').classList.toggle('active');
-});
+
 
 // === SISTEMA DE REPORTE DE APLICACIONES ===
 

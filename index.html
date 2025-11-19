@@ -120,11 +120,45 @@
         </div>
     </div>
 
-    <!-- Barra de búsqueda -->
-    <div class="search-container">
-        <div class="search-bar">
-            <i class="fas fa-search search-icon"></i>
-            <input type="text" class="search-input" placeholder="Buscar aplicaciones..." id="searchInput">
+    <!-- Nueva Sección de Búsqueda -->
+    <div class="search-section" id="searchSection">
+        <div class="search-header">
+            <button class="back-search-btn" id="backSearchBtn">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <div class="search-input-container">
+                <input type="text" class="search-input-new" placeholder="Buscar aplicaciones, juegos, desarrolladores..." id="searchInputNew">
+                <button class="clear-search-btn" id="clearSearchBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <div class="search-body" id="searchBody">
+            <div class="search-suggestions" id="searchSuggestions">
+                <h3><i class="fas fa-fire"></i> Categorías Populares</h3>
+                <div class="suggestions-grid">
+                    <div class="suggestion-chip" data-category="Redes sociales">Redes Sociales</div>
+                    <div class="suggestion-chip" data-category="Juegos">Juegos</div>
+                    <div class="suggestion-chip" data-category="Entretenimiento">Entretenimiento</div>
+                    <div class="suggestion-chip" data-category="Comunicación">Comunicación</div>
+                    <div class="suggestion-chip" data-category="Finanzas">Finanzas</div>
+                    <div class="suggestion-chip" data-category="Educación">Educación</div>
+                </div>
+            </div>
+            <div class="search-results" id="searchResults" style="display: none;">
+                <div class="search-results-header">
+                    <span>Resultados</span>
+                    <span class="search-results-count" id="resultsCount">0</span>
+                </div>
+                <div class="search-results-grid" id="searchResultsGrid"></div>
+            </div>
+            <div class="no-results" id="noResults" style="display: none;">
+                <div class="no-results-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h3>No se encontraron resultados</h3>
+                <p>Intenta con otros términos de búsqueda</p>
+            </div>
         </div>
     </div>
 
