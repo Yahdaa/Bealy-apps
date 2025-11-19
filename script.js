@@ -2069,8 +2069,11 @@ function getStoreLink(app) {
 }
 
 async function displayFeaturedApps() {
+  console.log('=== INICIANDO displayFeaturedApps ===');
   const featuredApps = document.getElementById('featuredApps');
+  console.log('featuredApps element:', featuredApps);
   featuredApps.innerHTML = '';
+  console.log('Total apps disponibles:', apps.length);
 
   // Find upcoming app release
   const upcomingApp = apps.find(app => !isAppReleased(app.releaseDate));
@@ -2119,18 +2122,9 @@ async function displayFeaturedApps() {
     });
   }
 
-  // Filtrar apps por país
-  const availableApps = await filterAppsByCountry(apps);
-
-  if (availableApps.length === 0) {
-    featuredApps.innerHTML = `
-      <div class="no-apps-message">
-        <h2>Apps no disponibles</h2>
-        <p>Lo sentimos, no hay aplicaciones disponibles en tu región en este momento.</p>
-      </div>
-    `;
-    return;
-  }
+  // Mostrar todas las apps sin filtro
+  const availableApps = apps;
+  console.log('availableApps:', availableApps.length);
 
   const sortedApps = [...availableApps].sort((a, b) => {
     return parseDownloads(b.downloads) - parseDownloads(a.downloads);
@@ -2313,6 +2307,7 @@ async function displayFeaturedApps() {
         .slice(0, 8)
     }
   ].forEach(section => {
+    console.log(`Sección: ${section.title}, Apps: ${section.apps.length}`);
     if (section.apps.length > 0) {
       const sectionElement = document.createElement('section');
       sectionElement.className = 'category-section';
@@ -5484,7 +5479,9 @@ function reattachClickHandlers() {
 }
 
 // Inicializar la visualización de aplicaciones
+console.log('=== SCRIPT CARGADO - Iniciando displayFeaturedApps ===');
 displayFeaturedApps().then(() => {
+  console.log('=== displayFeaturedApps COMPLETADO ===');
   reattachClickHandlers();
 });
 

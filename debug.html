@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug</title>
+</head>
+<body>
+    <h1>Debug Info</h1>
+    <div id="output"></div>
+    <script src="./script.js"></script>
+    <script>
+        setTimeout(() => {
+            const output = document.getElementById('output');
+            output.innerHTML = `
+                <p>Total apps: ${apps.length}</p>
+                <p>Apps con rating >= 4.5: ${apps.filter(app => app.rating >= 4.5).length}</p>
+                <p>Apps de Redes Sociales: ${apps.filter(app => app.category.toLowerCase() === 'redes sociales').length}</p>
+                <p>Apps de Entretenimiento: ${apps.filter(app => app.category === 'Entretenimiento').length}</p>
+                <p>Apps de Juegos: ${apps.filter(app => app.category === 'Juegos').length}</p>
+            `;
+        }, 1000);
+    </script>
+</body>
+</html>
