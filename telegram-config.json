@@ -1,0 +1,17 @@
+
+{
+  "telegram": {
+    "botToken": "7635694098:AAH4nhsv0szEFsIF0-Ali-NgVWD7bHKZF6U",
+    "channelId": "@glamapps",
+    "enablePolling": false
+  },
+  "platform": {
+    "url": "https://videonl.netlify.app/",
+    "name": "GlamApps"
+  },
+  "settings": {
+    "checkInterval": 30000,
+    "autoPublish": true,
+    "publishDelay": 2000
+  }
+}

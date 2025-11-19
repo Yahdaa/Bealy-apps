@@ -1,0 +1,722 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - Veraxa</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/dracula.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/css/css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/xml/xml.min.js"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .admin-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .admin-header {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .admin-header h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .admin-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+        }
+
+        .apps-list {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .animation-editor {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .app-item {
+            padding: 15px;
+            border: 2px solid #f0f0f0;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .app-item:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .app-item.selected {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .app-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+        }
+
+        .editor-section {
+            margin-bottom: 20px;
+        }
+
+        .editor-section h3 {
+            margin-bottom: 10px;
+            color: #667eea;
+        }
+
+        .code-editor {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #ff9800, #f57c00);
+            color: white;
+        }
+
+        .preview-area {
+            background: #f8f9fa;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            margin-top: 20px;
+            min-height: 200px;
+            position: relative;
+        }
+
+        .status-message {
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .github-sync {
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        .animation-templates {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .template-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .template-card:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .template-card.selected {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1><i class="fas fa-cogs"></i> Panel de Administración - Animaciones Veraxa</h1>
+            <p>Gestiona las animaciones personalizadas para cada aplicación</p>
+        </div>
+
+        <div class="admin-grid">
+            <!-- Lista de Aplicaciones -->
+            <div class="apps-list">
+                <h2><i class="fas fa-mobile-alt"></i> Aplicaciones</h2>
+                <div id="appsList">
+                    <!-- Las aplicaciones se cargarán aquí -->
+                </div>
+            </div>
+
+            <!-- Editor de Animaciones -->
+            <div class="animation-editor">
+                <div class="status-message" id="statusMessage"></div>
+                
+                <h2><i class="fas fa-magic"></i> Editor de Animaciones</h2>
+                <div id="selectedAppInfo">
+                    <p>Selecciona una aplicación para crear o editar su animación</p>
+                </div>
+
+                <div id="editorContent" style="display: none;">
+                    <!-- Plantillas de Animación -->
+                    <div class="editor-section">
+                        <h3>Plantillas de Animación</h3>
+                        <div class="animation-templates">
+                            <div class="template-card" data-template="plant">
+                                <i class="fas fa-seedling" style="font-size: 2em; color: #4CAF50;"></i>
+                                <h4>Planta Creciendo</h4>
+                                <p>Animación de crecimiento de planta</p>
+                            </div>
+                            <div class="template-card" data-template="sparkles">
+                                <i class="fas fa-sparkles" style="font-size: 2em; color: #FFD700;"></i>
+                                <h4>Destellos Mágicos</h4>
+                                <p>Efectos de partículas brillantes</p>
+                            </div>
+                            <div class="template-card" data-template="pulse">
+                                <i class="fas fa-heartbeat" style="font-size: 2em; color: #E91E63;"></i>
+                                <h4>Pulso Energético</h4>
+                                <p>Ondas de energía expansivas</p>
+                            </div>
+                            <div class="template-card" data-template="custom">
+                                <i class="fas fa-code" style="font-size: 2em; color: #9C27B0;"></i>
+                                <h4>Personalizada</h4>
+                                <p>Crea tu propia animación</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Configuración Básica -->
+                    <div class="editor-section">
+                        <h3>Configuración Básica</h3>
+                        <div class="form-group">
+                            <label>Tipo de Animación:</label>
+                            <select id="animationType">
+                                <option value="css">Solo CSS</option>
+                                <option value="css-js">CSS + JavaScript</option>
+                                <option value="custom">Completamente Personalizada</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Duración (ms):</label>
+                            <input type="number" id="animationDuration" value="5000" min="1000" max="10000">
+                        </div>
+                    </div>
+
+                    <!-- Editor CSS -->
+                    <div class="editor-section">
+                        <h3>CSS de la Animación</h3>
+                        <div class="code-editor">
+                            <textarea id="cssEditor"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Editor HTML -->
+                    <div class="editor-section">
+                        <h3>Estructura HTML</h3>
+                        <div class="code-editor">
+                            <textarea id="htmlEditor"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Editor JavaScript -->
+                    <div class="editor-section">
+                        <h3>JavaScript (Opcional)</h3>
+                        <div class="code-editor">
+                            <textarea id="jsEditor"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Área de Vista Previa -->
+                    <div class="editor-section">
+                        <h3>Vista Previa</h3>
+                        <div class="preview-area" id="previewArea">
+                            <p>Haz clic en "Vista Previa" para ver la animación</p>
+                        </div>
+                    </div>
+
+                    <!-- Botones de Acción -->
+                    <div class="editor-section">
+                        <button class="btn btn-primary" onclick="previewAnimation()">
+                            <i class="fas fa-play"></i> Vista Previa
+                        </button>
+                        <button class="btn btn-success" onclick="saveAnimation()">
+                            <i class="fas fa-save"></i> Guardar Animación
+                        </button>
+                        <button class="btn btn-warning" onclick="loadTemplate()">
+                            <i class="fas fa-download"></i> Cargar Plantilla
+                        </button>
+                    </div>
+
+                    <!-- Sincronización con GitHub -->
+                    <div class="github-sync">
+                        <h3><i class="fab fa-github"></i> Sincronización con GitHub</h3>
+                        <div class="form-group">
+                            <label>Repositorio:</label>
+                            <input type="text" id="githubRepo" placeholder="usuario/repositorio">
+                        </div>
+                        <div class="form-group">
+                            <label>Branch:</label>
+                            <input type="text" id="githubBranch" value="main">
+                        </div>
+                        <button class="btn btn-primary" onclick="syncWithGitHub()">
+                            <i class="fab fa-github"></i> Sincronizar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCFQ_geG0HIv2EZ-bfKc97TJNtf2sdqPzc",
+            authDomain: "clack-koder.firebaseapp.com",
+            databaseURL: "https://clack-koder-default-rtdb.firebaseio.com",
+            projectId: "clack-koder",
+            storageBucket: "clack-koder.firebasestorage.app",
+            messagingSenderId: "478151254938",
+            appId: "1:478151254938:web:e2c00e3a5426bd192b9023",
+            measurementId: "G-P29ME5Z3S1"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        let cssEditor, htmlEditor, jsEditor;
+        let selectedApp = null;
+
+        // Aplicaciones disponibles (esto se cargaría normalmente desde tu base de datos)
+        const apps = [
+            { name: "TikTok", icon: "https://upload.wikimedia.org/wikipedia/en/a/a9/TikTok_logo.svg" },
+            { name: "Roblox", icon: "https://play-lh.googleusercontent.com/7cIIPlWm4m7AGqVpEsIfyL-HW4cQla4ucXnfalMft1TMIYQIlf2vqgmthlZgbNAQoaQ" },
+            { name: "Instagram", icon: "https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" },
+            { name: "WhatsApp", icon: "https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" },
+            { name: "YouTube", icon: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjX5LVxRxYR6uDz_MyBLBgi6ihUSOBsm4g_XUvyBwt4b6INTXV2THSdouK&s=10" }
+        ];
+
+        // Plantillas de animación
+        const templates = {
+            plant: {
+                css: `.custom-animation-container {
+  width: 200px;
+  height: 200px;
+}
+
+.plant-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.plant-stem {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  width: 6px;
+  height: 0;
+  background: linear-gradient(to top, #228B22, #32CD32);
+  transform: translateX(-50%);
+  animation: growStem 2s ease-out forwards;
+}
+
+.plant-leaves {
+  position: absolute;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  animation: showLeaves 1s ease-out 2s forwards;
+}
+
+.leaf {
+  width: 20px;
+  height: 30px;
+  background: #32CD32;
+  border-radius: 0 100% 0 100%;
+  position: absolute;
+  transform-origin: bottom center;
+}
+
+.leaf:nth-child(1) {
+  transform: rotate(-30deg);
+  left: -15px;
+}
+
+.leaf:nth-child(2) {
+  transform: rotate(30deg);
+  right: -15px;
+}
+
+.flower {
+  position: absolute;
+  bottom: 120px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 40px;
+  background: radial-gradient(circle, #FFD700, #FFA500);
+  border-radius: 50%;
+  opacity: 0;
+  animation: bloomFlower 1s ease-out 3s forwards;
+}
+
+@keyframes growStem {
+  to { height: 100px; }
+}
+
+@keyframes showLeaves {
+  to { opacity: 1; }
+}
+
+@keyframes bloomFlower {
+  0% { opacity: 0; transform: translateX(-50%) scale(0); }
+  100% { opacity: 1; transform: translateX(-50%) scale(1); }
+}`,
+                html: `<div class="plant-container">
+  <div class="plant-stem"></div>
+  <div class="plant-leaves">
+    <div class="leaf"></div>
+    <div class="leaf"></div>
+  </div>
+  <div class="flower"></div>
+</div>`,
+                javascript: `// Agregar efectos de partículas
+setTimeout(() => {
+  for (let i = 0; i < 10; i++) {
+    const particle = document.createElement('div');
+    particle.style.position = 'absolute';
+    particle.style.width = '4px';
+    particle.style.height = '4px';
+    particle.style.background = '#FFD700';
+    particle.style.borderRadius = '50%';
+    particle.style.top = '60px';
+    particle.style.left = '50%';
+    particle.style.animation = \`particle\${i} 2s ease-out forwards\`;
+    container.appendChild(particle);
+  }
+}, 3000);`
+            }
+        };
+
+        // Inicializar editores de código
+        document.addEventListener('DOMContentLoaded', function() {
+            cssEditor = CodeMirror.fromTextArea(document.getElementById('cssEditor'), {
+                mode: 'css',
+                theme: 'dracula',
+                lineNumbers: true,
+                autoCloseBrackets: true
+            });
+
+            htmlEditor = CodeMirror.fromTextArea(document.getElementById('htmlEditor'), {
+                mode: 'xml',
+                theme: 'dracula',
+                lineNumbers: true,
+                autoCloseBrackets: true
+            });
+
+            jsEditor = CodeMirror.fromTextArea(document.getElementById('jsEditor'), {
+                mode: 'javascript',
+                theme: 'dracula',
+                lineNumbers: true,
+                autoCloseBrackets: true
+            });
+
+            loadApps();
+            setupTemplateSelection();
+        });
+
+        // Cargar lista de aplicaciones
+        function loadApps() {
+            const appsList = document.getElementById('appsList');
+            appsList.innerHTML = '';
+
+            apps.forEach(app => {
+                const appItem = document.createElement('div');
+                appItem.className = 'app-item';
+                appItem.innerHTML = `
+                    <img src="${app.icon}" alt="${app.name}" class="app-icon">
+                    <div>
+                        <h4>${app.name}</h4>
+                        <p>Configurar animación</p>
+                    </div>
+                `;
+                appItem.addEventListener('click', () => selectApp(app, appItem));
+                appsList.appendChild(appItem);
+            });
+        }
+
+        // Seleccionar aplicación
+        function selectApp(app, element) {
+            selectedApp = app;
+            
+            // Actualizar UI
+            document.querySelectorAll('.app-item').forEach(item => item.classList.remove('selected'));
+            element.classList.add('selected');
+
+            document.getElementById('selectedAppInfo').innerHTML = `
+                <h3>Editando: ${app.name}</h3>
+                <p>Configura la animación que se mostrará al hacer clic en esta aplicación</p>
+            `;
+
+            document.getElementById('editorContent').style.display = 'block';
+
+            // Cargar animación existente si existe
+            loadExistingAnimation(app.name);
+        }
+
+        // Cargar animación existente
+        async function loadExistingAnimation(appName) {
+            try {
+                const snapshot = await database.ref(`app-animations/${appName}`).once('value');
+                const animation = snapshot.val();
+                
+                if (animation) {
+                    cssEditor.setValue(animation.css || '');
+                    htmlEditor.setValue(animation.html || '');
+                    jsEditor.setValue(animation.javascript || '');
+                    document.getElementById('animationDuration').value = animation.duration || 5000;
+                    document.getElementById('animationType').value = animation.type || 'css';
+                }
+            } catch (error) {
+                console.error('Error cargando animación:', error);
+            }
+        }
+
+        // Configurar selección de plantillas
+        function setupTemplateSelection() {
+            document.querySelectorAll('.template-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    document.querySelectorAll('.template-card').forEach(c => c.classList.remove('selected'));
+                    this.classList.add('selected');
+                });
+            });
+        }
+
+        // Cargar plantilla seleccionada
+        function loadTemplate() {
+            const selectedTemplate = document.querySelector('.template-card.selected');
+            if (!selectedTemplate) {
+                showStatus('Selecciona una plantilla primero', 'error');
+                return;
+            }
+
+            const templateType = selectedTemplate.dataset.template;
+            const template = templates[templateType];
+
+            if (template) {
+                cssEditor.setValue(template.css);
+                htmlEditor.setValue(template.html);
+                jsEditor.setValue(template.javascript || '');
+                showStatus('Plantilla cargada correctamente', 'success');
+            }
+        }
+
+        // Vista previa de la animación
+        function previewAnimation() {
+            const css = cssEditor.getValue();
+            const html = htmlEditor.getValue();
+            const js = jsEditor.getValue();
+            const duration = document.getElementById('animationDuration').value;
+
+            const previewArea = document.getElementById('previewArea');
+            previewArea.innerHTML = '';
+
+            // Crear contenedor de vista previa
+            const container = document.createElement('div');
+            container.style.position = 'relative';
+            container.style.width = '200px';
+            container.style.height = '200px';
+            container.style.margin = '0 auto';
+
+            // Aplicar CSS
+            if (css) {
+                const style = document.createElement('style');
+                style.textContent = css;
+                document.head.appendChild(style);
+            }
+
+            // Aplicar HTML
+            if (html) {
+                container.innerHTML = html;
+            }
+
+            previewArea.appendChild(container);
+
+            // Ejecutar JavaScript
+            if (js) {
+                try {
+                    const func = new Function('container', js);
+                    func(container);
+                } catch (error) {
+                    console.error('Error en JavaScript:', error);
+                    showStatus('Error en el código JavaScript', 'error');
+                }
+            }
+
+            // Limpiar después de la duración
+            setTimeout(() => {
+                previewArea.innerHTML = '<p>Vista previa finalizada</p>';
+            }, parseInt(duration));
+        }
+
+        // Guardar animación
+        async function saveAnimation() {
+            if (!selectedApp) {
+                showStatus('Selecciona una aplicación primero', 'error');
+                return;
+            }
+
+            const animationData = {
+                type: document.getElementById('animationType').value,
+                css: cssEditor.getValue(),
+                html: htmlEditor.getValue(),
+                javascript: jsEditor.getValue(),
+                duration: parseInt(document.getElementById('animationDuration').value),
+                createdAt: Date.now(),
+                updatedAt: Date.now()
+            };
+
+            try {
+                await database.ref(`app-animations/${selectedApp.name}`).set(animationData);
+                showStatus(`Animación guardada para ${selectedApp.name}`, 'success');
+            } catch (error) {
+                console.error('Error guardando:', error);
+                showStatus('Error al guardar la animación', 'error');
+            }
+        }
+
+        // Sincronizar con GitHub
+        async function syncWithGitHub() {
+            const repo = document.getElementById('githubRepo').value;
+            const branch = document.getElementById('githubBranch').value;
+
+            if (!repo) {
+                showStatus('Ingresa el repositorio de GitHub', 'error');
+                return;
+            }
+
+            try {
+                // Aquí implementarías la sincronización real con GitHub API
+                showStatus('Funcionalidad de GitHub en desarrollo', 'error');
+            } catch (error) {
+                console.error('Error sincronizando:', error);
+                showStatus('Error al sincronizar con GitHub', 'error');
+            }
+        }
+
+        // Mostrar mensaje de estado
+        function showStatus(message, type) {
+            const statusMessage = document.getElementById('statusMessage');
+            statusMessage.textContent = message;
+            statusMessage.className = `status-message status-${type}`;
+            statusMessage.style.display = 'block';
+
+            setTimeout(() => {
+                statusMessage.style.display = 'none';
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

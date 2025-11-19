@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veraxa</title>
+    <link rel="stylesheet" href="./style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4653147807800151" crossorigin="anonymous"></script>
+</head>
+<body>
+    <!-- Pantalla de Mantenimiento (debe estar al principio para mayor efectividad) -->
+    <div class="maintenance-overlay" id="maintenanceOverlay" role="dialog" aria-modal="true" aria-labelledby="maintenance-title" aria-hidden="true">
+        <div class="maintenance-content">
+            <div class="maintenance-icon">
+                <i class="fas fa-tools"></i>
+            </div>
+            <h1 class="maintenance-title" id="maintenance-title">Sitio en Mantenimiento</h1>
+            <p class="maintenance-message">
+                Estamos trabajando para mejorar tu experiencia.
+                <br>
+                Por favor, vuelve pronto hasta que se terminen las correcciones.
+            </p>
+            <p class="maintenance-details">
+                Nuestro equipo está realizando actualizaciones importantes para ofrecerte un mejor servicio.
+                <br>
+                Gracias por tu paciencia.
+            </p>
+            <div class="maintenance-animation">
+                <div class="maintenance-dot"></div>
+                <div class="maintenance-dot"></div>
+                <div class="maintenance-dot"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenedor del aviso inicial (oculto por defecto cuando mantenimiento está activo) -->
+    <div class="aviso-container hidden" id="aviso">
+        <div class="slider">
+            <!-- Slide 1: Aviso sobre enlaces -->
+            <div class="slide" id="slide1">
+                <i class="fas fa-info-circle"></i>
+                <h3>Descarga segura</h3>
+                <p>Todos los enlaces dirigen a Google Play y App Store. No alojamos archivos APK ni versiones modificadas.</p>
+            </div>
+
+            <!-- Slide 2: Aviso sobre regiones -->
+            <div class="slide" id="slide2">
+                <i class="fas fa-globe"></i>
+                <h3>Disponibilidad de apps</h3>
+                <p>Algunas apps pueden no estar disponibles en tu país. Las aplicaciones se filtran automáticamente según tu región.</p>
+                <div id="country-info" style="margin-top: 10px; padding: 10px; background: #f0f0f0; border-radius: 8px;">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span id="user-country">Detectando tu país...</span>
+                </div>
+            </div>
+
+            <!-- Slide 3: Registro de usuario -->
+            <div class="slide" id="slide3">
+                <i class="fas fa-user"></i>
+                <h3>Tu perfil</h3>
+                <input type="text" id="username" placeholder="Tu nombre" style="width: 80%; padding: 8px; border-radius: 8px; border: 1px solid #ccc; text-align: center;">
+                <input type="file" id="file-input" accept="image/*" style="margin-top: 10px;">
+                <br>
+                <img id="profile-pic" src="https://via.placeholder.com/80" alt="Foto de perfil" style="width: 80px; height: 80px; border-radius: 50%; margin-top: 10px;">
+            </div>
+
+            <!-- Slide 4: Verificación -->
+            <div class="slide" id="slide4">
+                <i class="fas fa-check-circle"></i>
+                <h3>Verificación completada</h3>
+                <p class="verified"><span id="user-display">Usuario</span> <i class="fas fa-badge-check"></i></p>
+            </div>
+
+            <!-- Controles -->
+            <div class="controls">
+                <button class="btn" id="prevBtn" onclick="prevSlide()" disabled>Anterior</button>
+                <button class="btn" id="nextBtn" onclick="nextSlide()">Siguiente</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <div class="header-container">
+        <div class="left-section">
+            <button class="icon-button menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="app-title">Veraxa</div>
+        </div>
+        <div class="right-section">
+            <button class="icon-button search-toggle">
+                <i class="fas fa-search"></i>
+            </button>
+            <button class="icon-button" id="momentosBtn">
+                <i class="fas fa-comment-dots"></i>
+            </button>
+            <button class="icon-button" onclick="openSupportChat()">
+                <i class="fas fa-headset"></i>
+            </button>
+            <button class="icon-button" id="settingsIcon">
+                <i class="fas fa-cog"></i>
+            </button>
+        </div>
+    </div>
+
+    <div id="cameraModal" class="camera-modal">
+        <div class="camera-content">
+            <video id="cameraView" autoplay playsinline></video>
+            <button id="captureButton" class="capture-button">
+                <div class="capture-button-inner"></div>
+            </button>
+            <canvas id="particleCanvas"></canvas>
+        </div>
+    </div>
+
+    <!-- Barra de búsqueda -->
+    <div class="search-container">
+        <div class="search-bar">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" class="search-input" placeholder="Buscar aplicaciones..." id="searchInput">
+        </div>
+    </div>
+
+    <!-- Modal de Configuración -->
+    <div class="settings-modal" id="settingsModal">
+        <div class="settings-content">
+            <div class="settings-header">
+                <h2>Configuración</h2>
+                <button class="close-settings" id="closeSettings">&times;</button>
+            </div>
+            <div class="settings-body">
+                <div class="settings-item" onclick="toggleDarkMode()">
+                    <h3>Modo Claro/Oscuro</h3>
+                    <i class="fas fa-moon"></i>
+                </div>
+                <div class="settings-item" onclick="showFaqSupport()">
+                    <h3>FAQ y Soporte</h3>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div class="settings-item" onclick="openSupportChat()">
+                    <h3>Chat de Soporte</h3>
+                    <i class="fas fa-comments"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Información BeApp -->
+    <div class="beapp-info-modal" id="beappInfoModal">
+        <div class="beapp-info-content">
+            <div class="beapp-info-header">
+                <button class="back-to-settings" onclick="backToSettings()">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <h2>Acerca de BeApp</h2>
+            </div>
+            <div class="beapp-info-body">
+                <p>BeApp es una plataforma innovadora que se dedica a proporcionar a los usuarios una experiencia única en la descarga y gestión de aplicaciones. Nuestra misión es facilitar el acceso a las mejores aplicaciones mientras garantizamos la seguridad y calidad de cada descarga.</p>
+                <p>Características principales:</p>
+                <ul>
+                    <li>Verificación de seguridad de todas las aplicaciones</li>
+                    <li>Información detallada sobre cada aplicación</li>
+                    <li>Actualizaciones en tiempo real</li>
+                    <li>Soporte para múltiples plataformas</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Aplicaciones destacadas -->
+    <div class="featured-apps" id="featuredApps">
+        <!-- Los banners destacados se generarán aquí -->
+    </div>
+
+    <!-- Contenedor de aplicaciones -->
+    <div class="apps-container" id="appsContainer">
+        <!-- Las aplicaciones se generarán dinámicamente aquí -->
+    </div>
+
+    <!-- Modal de detalles de la aplicación -->
+    <div class="fullscreen-modal" id="appModal">
+        <div class="modal-header">
+            <button class="back-button" id="backButton">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h2>Detalles de la aplicación</h2>
+            <div style="width: 24px;"></div>
+        </div>
+        <div class="modal-content" id="modalContent"></div>
+    </div>
+
+    <!-- Modal de aplicaciones del desarrollador -->
+    <div class="developer-apps-modal" id="developerModal">
+        <div class="developer-apps-content">
+            <button class="close-developer-modal" id="closeDeveloperModal">
+                <i class="fas fa-times"></i>
+            </button>
+            <h3>Aplicaciones del desarrollador</h3>
+            <div id="developerApps"></div>
+        </div>
+    </div>
+
+    <!-- Modal de Momentos -->
+    <div class="momentos-modal" id="momentosModal">
+        <div class="momentos-content">
+            <div class="momentos-header">
+                <button class="back-momentos" id="backMomentos">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <h2>Momentos</h2>
+                <button class="new-post-btn" id="newPostBtn">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+            
+            <!-- Formulario para nuevo post -->
+            <div class="new-post-form" id="newPostForm" style="display: none;">
+                <div class="post-composer">
+                    <textarea id="postContent" placeholder="¿Qué está pasando?..." maxlength="280"></textarea>
+                    <div class="post-actions">
+                        <div class="post-actions-left">
+                            <span class="char-count">280</span>
+                        </div>
+                        <button class="publish-btn" id="publishBtn">
+                            <i class="fas fa-paper-plane"></i>
+                            Publicar
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Feed de posts -->
+            <div class="momentos-feed" id="momentosFeed">
+                <div class="loading-posts">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Cargando momentos...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de FAQ y Soporte -->
+    <div class="faq-modal" id="faqModal">
+        <div class="faq-content">
+            <div class="faq-header">
+                <button class="back-to-settings" onclick="backToSettings()">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <h2>FAQ y Soporte</h2>
+            </div>
+            <div class="faq-search">
+                <i class="fas fa-search"></i>
+                <input type="text" id="faqSearch" placeholder="Buscar artículos...">
+            </div>
+            <div class="faq-body">
+                <div class="faq-item" onclick="showFaqArticle('about')">
+                    <h3>¿Qué es BeApp?</h3>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div class="faq-item">
+                    <h3>¿Cómo instalar aplicaciones?</h3>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div class="faq-item">
+                    <h3>Problemas comunes</h3>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+
+    <!-- Modal de Chat de Soporte -->
+    <div class="support-chat-modal" id="supportChatModal">
+        <div class="support-chat-content">
+            <div class="support-chat-header">
+                <div class="support-agent-info">
+                    <div class="agent-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="agent-details">
+                        <h3>Agente Virtual</h3>
+                        <span class="agent-status">En línea</span>
+                    </div>
+                </div>
+                <button class="close-support-chat" id="closeSupportChat">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="support-chat-body" id="supportChatBody">
+                <!-- Los mensajes se agregarán aquí dinámicamente -->
+            </div>
+            
+            <div class="support-chat-input" id="supportChatInput">
+                <div class="chat-input-container">
+                    <input type="text" placeholder="Escribe tu mensaje..." id="chatMessageInput">
+                    <button class="send-message-btn" id="sendMessageBtn">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Formulario de contacto inicial -->
+            <div class="chat-contact-form" id="chatContactForm">
+                <div class="form-group">
+                    <label>Correo Electrónico:</label>
+                    <input type="email" id="chatEmailInput" placeholder="tu@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Descripción del problema:</label>
+                    <textarea id="chatProblemInput" placeholder="Describe tu problema aquí..."></textarea>
+                </div>
+                <button class="submit-contact-btn" id="submitContactBtn">
+                    <i class="fas fa-check"></i> Enviar
+                </button>
+            </div>
+            
+            <!-- Selector de aplicaciones -->
+            <div class="app-selector-container" id="appSelectorContainer" style="display: none;">
+                <div class="app-selector-header">
+                    <h3>Selecciona la aplicación con la que tienes problemas:</h3>
+                </div>
+                <div class="app-carousel" id="appCarousel">
+                    <!-- Las aplicaciones se cargarán aquí -->
+                </div>
+                <div class="app-selector-actions">
+                    <button class="confirm-app-btn" id="confirmAppBtn" disabled>
+                        <i class="fas fa-check"></i> Confirmar Aplicación
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Side Menu -->
+    <nav class="side-menu">
+        <a href="#" class="menu-item active">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="#games" class="menu-item" onclick="showGamesSection()">
+            <i class="fas fa-gamepad"></i>
+            <span>Games</span>
+        </a>
+        <a href="#websites" class="menu-item" onclick="showWebsitesSection()">
+            <i class="fas fa-globe"></i>
+            <span>Websites</span>
+        </a>
+        <a href="#editorial" class="menu-item" onclick="showEditorialSection()">
+            <i class="fas fa-edit"></i>
+            <span>Editorial</span>
+        </a>
+    </nav>
+
+    <!-- Websites Section -->
+    <div id="websitesSection" class="section-container" style="display: none;">
+        <h2 class="section-title">Popular Websites</h2>
+        <div id="websitesContainer" class="apps-grid"></div>
+    </div>
+
+    <!-- Games Section -->
+    <div id="gamesSection" class="section-container" style="display: none;">
+        <h2 class="section-title">Games</h2>
+        <div id="gamesContainer" class="apps-grid"></div>
+    </div>
+
+    <!-- Editorial Section -->
+    <div id="editorialSection" class="section-container" style="display: none;">
+        <h2 class="section-title">Developer's Guide</h2>
+        <div class="editorial-content">
+            <h3>How to Become a Developer</h3>
+            <div class="steps-container">
+                <div class="step-card">
+                    <i class="fas fa-code"></i>
+                    <h4>1. Create Your App</h4>
+                    <p>Develop your application using best practices and ensure it meets our quality standards.</p>
+                </div>
+                <div class="step-card">
+                    <i class="fas fa-check-circle"></i>
+                    <h4>2. Test Your App</h4>
+                    <p>Thoroughly test your application for bugs and ensure it works across different devices.</p>
+                </div>
+                <div class="step-card">
+                    <i class="fas fa-upload"></i>
+                    <h4>3. Submit for Review</h4>
+                    <p>Submit your application for review. Our team will check for quality and security.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript para el aviso inicial -->
+    <script>
+        let currentSlide = 1;
+
+        // Muestra la primera página y oculta las demás
+        function updateSlide() {
+            // Ocultar todos los slides
+            for (let i = 1; i <= 4; i++) {
+                const slide = document.getElementById("slide" + i);
+                if (slide) slide.style.display = "none";
+            }
+
+            // Mostrar solo el slide actual
+            const currentSlideElement = document.getElementById("slide" + currentSlide);
+            if (currentSlideElement) currentSlideElement.style.display = "block";
+
+            // Habilitar/deshabilitar botones
+            const prevBtn = document.getElementById("prevBtn");
+            const nextBtn = document.getElementById("nextBtn");
+            if (prevBtn) prevBtn.disabled = currentSlide === 1;
+            if (nextBtn) nextBtn.innerText = currentSlide === 4 ? "Comenzar" : "Siguiente";
+        }
+
+        function nextSlide() {
+            if (currentSlide < 4) {
+                currentSlide++;
+                updateSlide();
+            } else {
+                const aviso = document.getElementById("aviso");
+                if (aviso) {
+                    aviso.classList.add("hidden");
+                    localStorage.setItem("avisoMostrado", "true");
+                }
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                updateSlide();
+            }
+        }
+
+        // Actualizar nombre y foto de perfil
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById("file-input");
+            if (fileInput) {
+                fileInput.addEventListener("change", function(event) {
+                    const file = event.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            const profilePic = document.getElementById("profile-pic");
+                            if (profilePic) profilePic.src = e.target.result;
+                        }
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+
+            const usernameInput = document.getElementById("username");
+            if (usernameInput) {
+                usernameInput.addEventListener("input", function() {
+                    const userDisplay = document.getElementById("user-display");
+                    if (userDisplay) userDisplay.innerText = this.value || "Usuario";
+                });
+            }
+
+            // Si el aviso ya se mostró antes, lo ocultamos
+            if (localStorage.getItem("avisoMostrado")) {
+                const aviso = document.getElementById("aviso");
+                if (aviso) aviso.classList.add("hidden");
+            }
+
+            // Inicializar el primer slide
+            updateSlide();
+        });
+    </script>
+
+    <!-- JavaScript principal -->
+    <script src="./script.js"></script>
+</body>
+</html>
