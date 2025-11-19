@@ -17,8 +17,10 @@ if (typeof MomentosSystem !== 'undefined') {
       return;
     }
     
-    // Filtrar posts de usuarios bloqueados
-    const filteredPosts = posts.filter(post => !userBlockSystem.isBlocked(post.author));
+    // Filtrar posts de usuarios bloqueados (verificar que existe)
+    const filteredPosts = typeof userBlockSystem !== 'undefined' 
+      ? posts.filter(post => !userBlockSystem.isBlocked(post.author))
+      : posts;
     
     if (filteredPosts.length === 0) {
       feed.innerHTML = `
@@ -41,7 +43,7 @@ if (typeof MomentosSystem !== 'undefined') {
     const timeAgo = this.getTimeAgo(post.timestamp);
     const isLiked = post.likedBy && post.likedBy.includes(this.currentUser.id);
     const repliesCount = post.replies ? Object.keys(post.replies).length : 0;
-    const isBlocked = userBlockSystem.isBlocked(post.author);
+    const isBlocked = typeof userBlockSystem !== 'undefined' ? userBlockSystem.isBlocked(post.author) : false;
     
     return `
       <div class="post-card ${isBlocked ? 'blocked-post' : ''}" data-post-id="${post.id}" data-post-author="${post.author}">
