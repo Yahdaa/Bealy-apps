@@ -2211,6 +2211,127 @@ async function displayFeaturedApps() {
       apps: availableApps.filter(app => app.category.toLowerCase() === 'redes sociales')
         .sort((a, b) => parseDownloads(b.downloads) - parseDownloads(a.downloads))
         .slice(0, 10)
+    },
+    {
+      title: "Apps de Entretenimiento",
+      apps: availableApps.filter(app => app.category === 'Entretenimiento')
+        .sort((a, b) => b.rating - a.rating)
+        .slice(0, 8)
+    },
+    {
+      title: "Juegos Populares",
+      apps: availableApps.filter(app => app.category === 'Juegos')
+        .sort((a, b) => parseDownloads(b.downloads) - parseDownloads(a.downloads))
+        .slice(0, 8)
+    },
+    {
+      title: "Apps de Comunicación",
+      apps: availableApps.filter(app => app.category === 'Comunicación')
+        .sort((a, b) => b.rating - a.rating)
+        .slice(0, 8)
+    },
+    {
+      title: "Apps de Finanzas",
+      apps: availableApps.filter(app => app.category === 'Finanzas')
+        .sort((a, b) => b.rating - a.rating)
+        .slice(0, 6)
+    },
+    {
+      title: "Apps Educativas",
+      apps: availableApps.filter(app => app.category === 'Educación')
+        .sort((a, b) => b.rating - a.rating)
+        .slice(0, 6)
+    },
+    {
+      title: "Apps con Mejor Calificación",
+      apps: [...availableApps].sort((a, b) => b.rating - a.rating)
+        .slice(0, 10)
+    },
+    {
+      title: "Apps Ligeras (Menos de 50MB)",
+      apps: availableApps.filter(app => {
+        const size = parseInt(app.size);
+        return size < 50;
+      }).sort((a, b) => parseDownloads(b.downloads) - parseDownloads(a.downloads))
+        .slice(0, 8)
+    },
+    {
+      title: "Apps con Más de 100M Descargas",
+      apps: availableApps.filter(app => parseDownloads(app.downloads) >= 100000000)
+        .sort((a, b) => parseDownloads(b.downloads) - parseDownloads(a.downloads))
+        .slice(0, 10)
+    },
+    {
+      title: "Apps de Meta",
+      apps: availableApps.filter(app => app.developer === 'Meta')
+        .sort((a, b) => parseDownloads(b.downloads) - parseDownloads(a.downloads))
+    },
+    {
+      title: "Apps de Google",
+      apps: availableApps.filter(app => app.developer.includes('Google'))
+        .sort((a, b) => parseDownloads(b.downloads) - parseDownloads(a.downloads))
+    },
+    {
+      title: "Apps de ByteDance",
+      apps: availableApps.filter(app => app.developer === 'ByteDance')
+        .sort((a, b) => parseDownloads(b.downloads) - parseDownloads(a.downloads))
+    },
+    {
+      title: "Apps con Seguridad Verificada",
+      apps: availableApps.filter(app => app.security === true)
+        .sort((a, b) => b.rating - a.rating)
+        .slice(0, 10)
+    },
+    {
+      title: "Apps Recientemente Actualizadas",
+      apps: [...availableApps].sort((a, b) => {
+        const dateA = new Date(app.releaseDate || 0);
+        const dateB = new Date(app.releaseDate || 0);
+        return dateB - dateA;
+      }).slice(0, 8)
+    },
+    {
+      title: "Apps de Productividad",
+      apps: availableApps.filter(app => app.category === 'Productividad')
+        .sort((a, b) => b.rating - a.rating)
+        .slice(0, 6)
+    },
+    {
+      title: "Apps de Música y Audio",
+      apps: availableApps.filter(app => app.category === 'Música')
+        .sort((a, b) => parseDownloads(b.downloads) - parseDownloads(a.downloads))
+        .slice(0, 6)
+    },
+    {
+      title: "Apps de Fotografía",
+      apps: availableApps.filter(app => app.category === 'Fotografía')
+        .sort((a, b) => b.rating - a.rating)
+        .slice(0, 6)
+    },
+    {
+      title: "Apps de Viajes",
+      apps: availableApps.filter(app => app.category === 'Viajes')
+        .sort((a, b) => b.rating - a.rating)
+        .slice(0, 6)
+    },
+    {
+      title: "Apps de Transporte",
+      apps: availableApps.filter(app => app.category === 'Transporte')
+        .sort((a, b) => parseDownloads(b.downloads) - parseDownloads(a.downloads))
+        .slice(0, 6)
+    },
+    {
+      title: "Apps Esenciales",
+      apps: availableApps.filter(app => 
+        ['WhatsApp', 'Instagram', 'YouTube', 'Gmail', 'Google Maps'].includes(app.name)
+      ).sort((a, b) => parseDownloads(b.downloads) - parseDownloads(a.downloads))
+    },
+    {
+      title: "Apps para Gamers",
+      apps: availableApps.filter(app => 
+        app.category === 'Juegos' || ['Discord', 'Twitch', 'Steam'].includes(app.name)
+      ).sort((a, b) => b.rating - a.rating)
+        .slice(0, 8)
     }
   ].forEach(section => {
     if (section.apps.length > 0) {
